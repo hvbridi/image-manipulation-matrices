@@ -21,11 +21,12 @@ def get_shape(matrix1 : list[list[int]]):
     return n_rows, n_columns
     
 def check_same_shape(matrix1, matrix2):
-    shape1 = get_shape(matrix2)
+    shape1 = get_shape(matrix1)
     shape2 = get_shape(matrix2)
-    if matrix1 and matrix2:
-        n_rows1, n_columns1 = get_shape(matrix1)
-        n_rows2, n_columns2 = get_shape(matrix2)
+    if not shape1 or not shape2:
+        return False
+    n_rows1, n_columns1 = shape1
+    n_rows2, n_columns2 = shape2
     if n_rows1 == n_rows2 and n_columns1 == n_columns2:
         return True
     else:
