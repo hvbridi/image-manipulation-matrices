@@ -36,6 +36,17 @@ def sum_matrix(matrix1, matrix2):
         matrix3.append(result_row)
     return matrix3
 
+def sub_matrix(matrix1, matrix2):
+    if not check_shape(matrix1, matrix2):
+        return
+    matrix3 = []
+    for i_row, row in enumerate(matrix1):
+        result_row = []
+        for i, n in enumerate(row):
+            result_row.append(n-matrix2[i_row][i])
+        matrix3.append(result_row)
+    return matrix3
+
 
 
 
