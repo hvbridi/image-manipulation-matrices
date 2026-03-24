@@ -1,4 +1,4 @@
-def check_if_matrix(matrix1 : list[list[int]]):
+def get_shape(matrix1 : list[list[int]]):
     if not isinstance(matrix1, list) or len(matrix1) == 0:
         print('Please insert a non-empty and valid matrix')
         return False
@@ -6,33 +6,35 @@ def check_if_matrix(matrix1 : list[list[int]]):
         if not isinstance(row, list):
             print('Please insert a valid matrix')
             return False
+        
     if len(matrix1[0]) == 0:
         print('Please insert a non-empty matrix')
         return False
-    return True
     
-def check_same_shape(matrix1, matrix2):
-    if not check_if_matrix(matrix1) or not check_if_matrix(matrix2):
-        return False
     n_rows = len(matrix1)
     n_columns = len(matrix1[0])
     for row in matrix1:
         if len(row) != n_columns:
             print('Not a valid matrix')
             return False
-    if len(matrix2) != n_rows:
-        print('The matrices need to have the same shape')
+
+    return n_rows, n_columns
+    
+def check_same_shape(matrix1, matrix2):
+    shape1 = get_shape(matrix2)
+    shape2 = get_shape(matrix2)
+    if matrix1 and matrix2:
+        n_rows1, n_columns1 = get_shape(matrix1)
+        n_rows2, n_columns2 = get_shape(matrix2)
+    if n_rows1 == n_rows2 and n_columns1 == n_columns2:
+        return True
+    else:
         return False
-    for row in matrix2:
-        if len(row) != n_columns:
-            print('The matrices need to have the same shape')
-            return False
-    return True
 
         
 def sum_matrix(matrix1, matrix2):
     if not check_same_shape(matrix1, matrix2):
-        return
+        return False
     matrix3 = []
     for i_row, row in enumerate(matrix1):
         result_row = []
@@ -52,6 +54,10 @@ def sub_matrix(matrix1, matrix2):
         matrix3.append(result_row)
     return matrix3
 
+def mult_matrix(matrix1, matrix2):
+    if not get_shape(matrix1) or not get_shape(matrix2):
+        return False
+    
 
 
 
