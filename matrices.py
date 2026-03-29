@@ -56,8 +56,26 @@ def sub_matrix(matrix1, matrix2):
     return matrix3
 
 def mult_matrix(matrix1, matrix2):
-    if not get_shape(matrix1) or not get_shape(matrix2):
+    shape1=get_shape(matrix1)
+    shape2=get_shape(matrix2)
+    if not shape1 or not shape2:
         return False
+    n_rows1, n_columns1 = shape1
+    n_rows2, n_columns2 = shape2
+    if n_columns1 != n_rows2:
+        print('The numbers of columns of the first matrix has to be the same as the number os rows of the second matrix')
+        return False
+    result_matrix = []
+    for row1 in matrix1:
+        new_row = []
+        for j in range(len(matrix2[0])):
+            element = 0
+            for k, n in enumerate(row1):
+                element += n * matrix2[k][j]
+            new_row.append(element)
+        result_matrix.append(new_row)
+    return result_matrix
+#the number of the row of the matrix1 dictated the number of the column of the matrix2
     
 
 
