@@ -75,7 +75,7 @@ def mult_matrix(matrix1, matrix2):
             new_row.append(element)
         result_matrix.append(new_row)
     return result_matrix
-#the number of the row of the matrix1 dictated the number of the column of the matrix2
+
     
 
 
