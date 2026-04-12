@@ -33,7 +33,7 @@ def check_same_shape(matrix1, matrix2):
         return False
 
         
-def sum_matrix(matrix1, matrix2):
+def matrix_addition(matrix1, matrix2):
     if not check_same_shape(matrix1, matrix2):
         return False
     matrix3 = []
@@ -44,7 +44,7 @@ def sum_matrix(matrix1, matrix2):
         matrix3.append(result_row)
     return matrix3
 
-def sub_matrix(matrix1, matrix2):
+def matrix_subtraction(matrix1, matrix2):
     if not check_same_shape(matrix1, matrix2):
         return
     matrix3 = []
@@ -55,7 +55,7 @@ def sub_matrix(matrix1, matrix2):
         matrix3.append(result_row)
     return matrix3
 
-def mult_matrix(matrix1, matrix2):
+def matrix_multiplication(matrix1, matrix2):
     shape1=get_shape(matrix1)
     shape2=get_shape(matrix2)
     if not shape1 or not shape2:
@@ -81,7 +81,5 @@ def mult_matrix(matrix1, matrix2):
 
 
 
-
-    
 
 
