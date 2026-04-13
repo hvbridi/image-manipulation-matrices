@@ -84,12 +84,18 @@ def image_to_matrix(image):
     b=[]
     width, height = image.size
     for y in range(height):
+        row_r=[]
+        row_g=[]
+        row_b=[]
         for x in range(width):
-            rgb = image.getpixel((x,y))
-            red,green,blue = rgb
-            r.append(red)
-            g.append(green)
-            b.append(blue)
+            colors = image.getpixel((x,y))
+            red,green,blue = colors
+            row_r.append(red)
+            row_g.append(green)
+            row_b.append(blue)
+        r.append(row_r)
+        g.append(row_g)
+        b.append(row_b)
     return r,g,b
 
 r,g,b = image_to_matrix(Image.open('fat_frog.bmp'))
