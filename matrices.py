@@ -1,3 +1,5 @@
+from PIL import Image
+
 def get_shape(matrix1 : list[list[int]]):
     if not isinstance(matrix1, list) or len(matrix1) == 0:
         print('Please insert a non-empty and valid matrix')
@@ -75,6 +77,25 @@ def matrix_multiplication(matrix1, matrix2):
             new_row.append(element)
         result_matrix.append(new_row)
     return result_matrix
+
+def image_to_matrix(image):
+    r=[]
+    g=[]
+    b=[]
+    width, height = image.size
+    for y in range(height):
+        for x in range(width):
+            rgb = image.getpixel((x,y))
+            red,green,blue = rgb
+            r.append(red)
+            g.append(green)
+            b.append(blue)
+    return r,g,b
+
+r,g,b = image_to_matrix(Image.open('fat_frog.bmp'))
+print(r[:10],g[:10],b[:10])
+
+
 
     
 
