@@ -98,12 +98,17 @@ def image_to_matrix(image):
         b.append(row_b)
     return r,g,b
 
-r,g,b = image_to_matrix(Image.open('fat_frog.bmp'))
-print(r[:10],g[:10],b[:10])
 
 
+def matrix_to_image(matrix_red,matrix_green,matrix_blue):
+    image = Image.new(size=(len(matrix_blue[0]),len(matrix_blue)), mode='RGB')
+    for y in range(len(matrix_blue)):
+        for x in range(len(matrix_blue[0])):
+            pixel_rgb = (matrix_red[y][x],matrix_green[y][x],matrix_blue[y][x])
+            image.putpixel((x,y),pixel_rgb)
+    return image
 
-    
+
 
 
 
