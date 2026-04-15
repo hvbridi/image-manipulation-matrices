@@ -108,7 +108,20 @@ def matrix_to_image(matrix_red,matrix_green,matrix_blue):
             image.putpixel((x,y),pixel_rgb)
     return image
 
+def to_grayscale(matrix_red,matrix_green,matrix_blue):
+    gray_image=[]
+    for r_row,g_row,b_row in zip(matrix_red,matrix_green,matrix_blue):
+        gray_row=[]
+        for r,g,b in zip(r_row,g_row,b_row):
+            gray_row.append(round(r*0.2126+g*0.7152+b*0.0722))
+        gray_image.append(gray_row)
+    return gray_image
+            
 
+r,g,b = image_to_matrix(Image.open('fat_frog.bmp'))
+r = matrix_addition(r,r)
+image = matrix_to_image(r,g,b)
+image.show()
 
 
 
