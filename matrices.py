@@ -1,8 +1,12 @@
 from PIL import Image
+import numpy as np
 
 def get_shape(matrix1 : list[list[int]]):
     if not isinstance(matrix1, list) or len(matrix1) == 0:
         print('Please insert a non-empty and valid matrix')
+        return False
+    if not isinstance(matrix1[0], list):
+        print('The input must be a 2d list')
         return False
     for row in (matrix1):
         if not isinstance(row, list):
@@ -37,6 +41,7 @@ def check_same_shape(matrix1, matrix2):
         
 def matrix_addition(matrix1, matrix2):
     if not check_same_shape(matrix1, matrix2):
+        print('The matrices need to have the same dimensions')
         return False
     matrix3 = []
     for i_row, row in enumerate(matrix1):
@@ -48,7 +53,8 @@ def matrix_addition(matrix1, matrix2):
 
 def matrix_subtraction(matrix1, matrix2):
     if not check_same_shape(matrix1, matrix2):
-        return
+        print('The matrices need to have the same dimensions')
+        return False
     matrix3 = []
     for i_row, row in enumerate(matrix1):
         result_row = []
@@ -117,6 +123,32 @@ def to_grayscale(matrix_red,matrix_green,matrix_blue):
         gray_matrix.append(gray_row)
     grey_image = matrix_to_image(gray_matrix,gray_matrix,gray_matrix)
     return grey_image
+
+def rotate_matrix(matrix,point,degrees):
+    new_matrix=[]
+    height,width = len(matrix),len(matrix[0])
+    for y in range(height):
+        blank_row=[]
+        for x in range(width):
+            blank_row.append(0)
+        new_matrix.append(blank_row)
+
+    sin = np.sin(np.deg2rad(degrees))
+    cos = np.cos(np.deg2rad(degrees))
+    center_x,center_y=point
+    rotation_matrix = [[cos,-sin],[sin,cos]]
+    for y in range(len(matrix)):
+        for x in range(len(matrix[0])):
+            moved_x = x-center_x
+            moved_y = y-center_y
+            result=matrix_multiplication(rotation_matrix,[[moved_x],[moved_y]])
+            new_matrix[]
+
+
+            
+        new_matrix.append(new_row)
+    
+
             
 
 r,g,b = image_to_matrix(Image.open('fat_frog.bmp'))
