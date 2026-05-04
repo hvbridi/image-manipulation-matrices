@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+import math
 
 def get_shape(matrix1 : list[list[int]]):
     if not isinstance(matrix1, list) or len(matrix1) == 0:
@@ -124,6 +125,7 @@ def to_grayscale(matrix_red,matrix_green,matrix_blue):
     grey_image = matrix_to_image(gray_matrix,gray_matrix,gray_matrix)
     return grey_image
 
+'''
 def rotate_matrix(matrix,point,degrees):
     new_matrix=[]
     height,width = len(matrix),len(matrix[0])
@@ -147,7 +149,7 @@ def rotate_matrix(matrix,point,degrees):
 
             
         new_matrix.append(new_row)
-    
+'''
 
             
 
@@ -155,6 +157,36 @@ r,g,b = image_to_matrix(Image.open('fat_frog.bmp'))
 image = to_grayscale(r,g,b)
 
 image.show()
+
+def edge_detection(matrix):
+    edge_matrix = []
+    vertical_kernel = [[-1,0,1],[-2,0,2],[-1,0,1]]
+    horizontal_kernel = [[1,2,1],[0,0,0],[-1,-2,-1]]
+    height,width = len(matrix), len(matrix[0])
+    padded_matrix = []
+    for _ in range(height+2):
+        padded_row=[]
+        for _ in range(width+2):
+            padded_row.append(0)
+        padded_matrix.append(padded_row)
+
+    for y in range(height):
+        for x in range(width):
+            padded_matrix[y+1][x+1] = matrix[y][x]
+    
+    for y in range(1,height+1):
+        edge_row=[]
+        for x in range(1,width+1):
+            vertical_value = 0
+            horizontal_value = 0
+            for i in range(3):
+                for j in range(3):
+                    vertical_value += vertical_kernel[i][j] * padded_matrix[y+i-1][x+j-1]
+                    horizontal_value += horizontal_kernel[i][j] * padded_matrix[y+i-1][x+j-1]
+            edge_row.append(math.sqrt(vertical_value**2 + horizontal_value**2))
+        edge_matrix.append(edge_row)
+    return edge_matrix
+
 
 
 

@@ -60,6 +60,7 @@ def matrix_addition(matrix1, matrix2):
         matrix3.append(result_row)
     return matrix3
 
+
 def matrix_subtraction(matrix1, matrix2):
     #verification to check if the subtraction is valid
     if not check_same_shape(matrix1, matrix2):
@@ -161,3 +162,10 @@ if __name__ == "__main__":
     print(scalar_multiplication(A, 2))
     print(scalar_multiplication(A, "2"))
     print(get_shape(V))
+
+[1,2,9,3]
+[3,4,7]
+
+[[7, 8], 
+ [9, 10], 
+ [11, 12]]
