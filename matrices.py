@@ -122,8 +122,8 @@ def to_grayscale(matrix_red,matrix_green,matrix_blue):
         for r,g,b in zip(r_row,g_row,b_row):
             gray_row.append(round(r*0.2126+g*0.7152+b*0.0722))
         gray_matrix.append(gray_row)
-    grey_image = matrix_to_image(gray_matrix,gray_matrix,gray_matrix)
-    return grey_image
+    gray_image = matrix_to_image(gray_matrix,gray_matrix,gray_matrix)
+    return gray_matrix, gray_image
 
 '''
 def rotate_matrix(matrix,point,degrees):
@@ -153,10 +153,6 @@ def rotate_matrix(matrix,point,degrees):
 
             
 
-r,g,b = image_to_matrix(Image.open('fat_frog.bmp'))
-image = to_grayscale(r,g,b)
-
-image.show()
 
 def edge_detection(matrix):
     edge_matrix = []
@@ -183,13 +179,23 @@ def edge_detection(matrix):
                 for j in range(3):
                     vertical_value += vertical_kernel[i][j] * padded_matrix[y+i-1][x+j-1]
                     horizontal_value += horizontal_kernel[i][j] * padded_matrix[y+i-1][x+j-1]
-            edge_row.append(math.sqrt(vertical_value**2 + horizontal_value**2))
+            edge_row.append(int(min(255,math.sqrt(vertical_value**2 + horizontal_value**2))))
         edge_matrix.append(edge_row)
     return edge_matrix
 
 
 
+r,g,b = image_to_matrix(Image.open('fat_frog.bmp'))
+image = to_grayscale(r,g,b)[1]
 
+image.show()
 
+img = Image.open('frog_white_background.bmp')
+r2,g2,b2 = image_to_matrix(img)
+img = to_grayscale(r2,g2,b2)[0]
+img = edge_detection(img)
+img = matrix_to_image(img,img,img)
+img.show()
+img.save('frog_outline.png')
 
 
