@@ -1,5 +1,4 @@
 from PIL import Image
-import numpy as np
 import math
 
 def get_shape(matrix1 : list[list[int]]):
@@ -125,31 +124,91 @@ def to_grayscale(matrix_red,matrix_green,matrix_blue):
     gray_image = matrix_to_image(gray_matrix,gray_matrix,gray_matrix)
     return gray_matrix, gray_image
 
-'''
-def rotate_matrix(matrix,point,degrees):
-    new_matrix=[]
-    height,width = len(matrix),len(matrix[0])
-    for y in range(height):
-        blank_row=[]
-        for x in range(width):
-            blank_row.append(0)
-        new_matrix.append(blank_row)
-
-    sin = np.sin(np.deg2rad(degrees))
-    cos = np.cos(np.deg2rad(degrees))
-    center_x,center_y=point
-    rotation_matrix = [[cos,-sin],[sin,cos]]
-    for y in range(len(matrix)):
-        for x in range(len(matrix[0])):
-            moved_x = x-center_x
-            moved_y = y-center_y
-            result=matrix_multiplication(rotation_matrix,[[moved_x],[moved_y]])
-            new_matrix[]
-
-
+def rotate_matrix(matrix1, point, angle_degrees):
+    shape1 = get_shape(matrix1)
+    if not shape1:
+        return False
+    
+    n_rows1, n_columns1 = shape1
+    x_centerPoint, y_centerPoint = point # x = column , y = row
+    angle_radian = math.radians(angle_degrees)
+    cos1 = math.cos(angle_radian)
+    sin1 = math.sin(angle_radian)
+    
+    result_matrix = []
+    for r in range(n_rows1):
+        result_matrix.append([0] * n_columns1)
+    
+    for i in range(n_rows1): #i = row = y
+        for j in range(n_columns1): # j = column = x
+            # Input point into origin (0,0)
+            x = j - x_centerPoint
+            y = i - y_centerPoint
             
-        new_matrix.append(new_row)
-'''
+            # Inverse rotation, reversing the angle to find source point
+            source_x = cos1 * x + sin1 * y + x_centerPoint
+            source_y = -sin1 * x + cos1 * y + y_centerPoint
+            sourceRow = round(source_y)
+            sourceColumn = round(source_x)
+            
+            if 0 <= sourceRow < n_rows1 and 0 <= sourceColumn < n_columns1:
+                result_matrix[i][j] = matrix1[sourceRow][sourceColumn]
+                
+    return result_matrix
+
+def scale_matrix(matrix2, scale_factor):
+    if not isinstance(scale_factor, (int, float)) or scale_factor <= 0:
+        print("Scale Factor must be positive!")
+        return False
+    
+    shape2 = get_shape(matrix2)
+    if not shape2:
+        return False
+    
+    n_rows2 , n_columns2 = shape2
+    
+    rows2 = int(n_rows2 * scale_factor)
+    columns2 = int(n_columns2 * scale_factor)
+    
+    result_matrix = []
+    for i in range(rows2):
+        result_row = []
+        for j in range(columns2):
+            sourceRow = int(i / scale_factor)
+            sourceColumn = int(j / scale_factor)
+            
+            result_row.append(matrix2[sourceRow][sourceColumn])
+        result_matrix.append(result_row)
+        
+    return result_matrix
+
+def skew_matrix(matrix3, skew_x, skew_y):
+    if not isinstance(skew_x, (int, float)) or not isinstance(skew_y,(int, float)):
+        return False
+    
+    shape3 = get_shape(matrix3)
+    if not shape3:
+        return False
+    
+    n_rows3, n_columns3 = shape3
+    
+    columns3 = n_columns3 + int(abs(skew_x) * n_rows3)
+    rows3 = n_rows3 + int(abs(skew_y) * n_columns3)
+    
+    result_matrix = []
+    for r in range(rows3):
+        result_matrix.append([0] * columns3)
+    
+    for i in range(n_rows3):
+        for j in range(n_columns3):
+            new_j = j + int(skew_x * i)
+            new_i = i + int(skew_y * j)
+            
+            if 0 <= new_i < rows3 and 0 <= new_j < columns3:
+                result_matrix[new_i][new_j] = matrix3[i][j]
+        
+    return result_matrix
+
 
             
 
@@ -167,7 +226,7 @@ def edge_detection(matrix):
         padded_matrix.append(padded_row)
 
     for y in range(height):
-        for x in range(width):
+        for x in range(width):  
             padded_matrix[y+1][x+1] = matrix[y][x]
     
     for y in range(1,height+1):
@@ -179,23 +238,26 @@ def edge_detection(matrix):
                 for j in range(3):
                     vertical_value += vertical_kernel[i][j] * padded_matrix[y+i-1][x+j-1]
                     horizontal_value += horizontal_kernel[i][j] * padded_matrix[y+i-1][x+j-1]
+            #edge_row.append(0 if vertical_value**2 + horizontal_value**2<50 else 255)
             edge_row.append(int(min(255,math.sqrt(vertical_value**2 + horizontal_value**2))))
         edge_matrix.append(edge_row)
     return edge_matrix
 
 
 
-r,g,b = image_to_matrix(Image.open('fat_frog.bmp'))
-image = to_grayscale(r,g,b)[1]
+#r,g,b = image_to_matrix(Image.open('fat_frog.bmp'))
+#image = to_grayscale(r,g,b)[1]
 
-image.show()
+#image.show()
 
 img = Image.open('frog_white_background.bmp')
+
 r2,g2,b2 = image_to_matrix(img)
 img = to_grayscale(r2,g2,b2)[0]
 img = edge_detection(img)
 img = matrix_to_image(img,img,img)
 img.show()
-img.save('frog_outline.png')
+
+
 
 
