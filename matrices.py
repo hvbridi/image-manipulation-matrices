@@ -213,7 +213,7 @@ def skew_matrix(matrix3, skew_x, skew_y):
             
 
 
-def edge_detection(matrix):
+def edge_detection(matrix, threshold):
     edge_matrix = []
     vertical_kernel = [[-1,0,1],[-2,0,2],[-1,0,1]]
     horizontal_kernel = [[1,2,1],[0,0,0],[-1,-2,-1]]
@@ -238,8 +238,8 @@ def edge_detection(matrix):
                 for j in range(3):
                     vertical_value += vertical_kernel[i][j] * padded_matrix[y+i-1][x+j-1]
                     horizontal_value += horizontal_kernel[i][j] * padded_matrix[y+i-1][x+j-1]
-            #edge_row.append(0 if vertical_value**2 + horizontal_value**2<50 else 255)
-            edge_row.append(int(min(255,math.sqrt(vertical_value**2 + horizontal_value**2))))
+            edge_row.append(0 if vertical_value**2 + horizontal_value**2<threshold**2 else 255)
+            #edge_row.append(int(min(255,math.sqrt(vertical_value**2 + horizontal_value**2))))
         edge_matrix.append(edge_row)
     return edge_matrix
 
@@ -250,13 +250,7 @@ def edge_detection(matrix):
 
 #image.show()
 
-img = Image.open('frog_white_background.bmp')
 
-r2,g2,b2 = image_to_matrix(img)
-img = to_grayscale(r2,g2,b2)[0]
-img = edge_detection(img)
-img = matrix_to_image(img,img,img)
-img.show()
 
 
 
