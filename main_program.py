@@ -41,7 +41,7 @@ def main():
 
     elif choice == '4':
         gray_mat = to_grayscale(channels[0], channels[1], channels[2])[0]
-        out_channels = [gray_mat, gray_mat, gray_mat]
+        out_channels = [gray_mat] * 3
 
     elif choice == '5':
         threshold = int(input("Edge detection threshold (between 1 and 255): "))
