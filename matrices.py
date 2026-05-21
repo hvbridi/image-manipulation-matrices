@@ -2,23 +2,27 @@ from PIL import Image
 import math
 
 def get_shape(matrix1 : list[list[int]]):
+    #checks if the matrix itself is a non-empty list
     if not isinstance(matrix1, list) or len(matrix1) == 0:
         print('Please insert a non-empty and valid matrix')
         return False
+    #checks if the list is a nested list
     if not isinstance(matrix1[0], list):
         print('The input must be a 2d list')
         return False
     for row in (matrix1):
+        #checks if every list inside the matrix is another list
         if not isinstance(row, list):
             print('Please insert a valid matrix')
             return False
-        
+    #check if the first nested list is empty in order to secure a safe verification in the next block
     if len(matrix1[0]) == 0:
         print('Please insert a non-empty matrix')
         return False
     
     n_rows = len(matrix1)
     n_columns = len(matrix1[0])
+    #checks if all the nested lists have the same lenght
     for row in matrix1:
         if len(row) != n_columns:
             print('Not a valid matrix')
@@ -27,6 +31,7 @@ def get_shape(matrix1 : list[list[int]]):
     return n_rows, n_columns
     
 def check_same_shape(matrix1, matrix2):
+    #gets the shape of 2 matrices and checks if they are equal
     shape1 = get_shape(matrix1)
     shape2 = get_shape(matrix2)
     if not shape1 or not shape2:
@@ -40,59 +45,75 @@ def check_same_shape(matrix1, matrix2):
 
         
 def matrix_addition(matrix1, matrix2):
+    #checks if the matrices and operation are valid
     if not check_same_shape(matrix1, matrix2):
         print('The matrices need to have the same dimensions')
         return False
     matrix3 = []
+    #iterates through each row of matrix1
     for i_row, row in enumerate(matrix1):
         result_row = []
+        #for each element of a certain row do the sum of it with the element of matrix2 of same coordenate and append it to the new matrix
         for i, n in enumerate(row):
             result_row.append(n+matrix2[i_row][i])
         matrix3.append(result_row)
     return matrix3
 
 def matrix_subtraction(matrix1, matrix2):
+    #checks if the matrices and operation are valid
     if not check_same_shape(matrix1, matrix2):
         print('The matrices need to have the same dimensions')
         return False
     matrix3 = []
+    #iterates thorugh each element of matrix1
     for i_row, row in enumerate(matrix1):
         result_row = []
+        #for each element of a certain row do the substraction of it with the element of matrix2 of same coordenate and append it to the new matrix
         for i, n in enumerate(row):
             result_row.append(n-matrix2[i_row][i])
         matrix3.append(result_row)
     return matrix3
 
 def matrix_multiplication(matrix1, matrix2):
+    #checks if the matrices are valid
     shape1=get_shape(matrix1)
     shape2=get_shape(matrix2)
     if not shape1 or not shape2:
         return False
     n_rows1, n_columns1 = shape1
     n_rows2, n_columns2 = shape2
+    #checks if the operation is valid (the number of columns of the first matrix is equal to the number of rows of the second one)
     if n_columns1 != n_rows2:
         print('The numbers of columns of the first matrix has to be the same as the number os rows of the second matrix')
         return False
     result_matrix = []
+    #iterates through each row in matrix1
     for row1 in matrix1:
         new_row = []
+        #iterates through each column of matrix2
         for j in range(len(matrix2[0])):
             element = 0
+            #iterates through each index and element of a certain row
             for k, n in enumerate(row1):
+                #executes the multiplication and then appends it to the new matrix
                 element += n * matrix2[k][j]
             new_row.append(element)
         result_matrix.append(new_row)
     return result_matrix
 
 def image_to_matrix(image):
+    #creates one empty list for each color channel
     r=[]
     g=[]
     b=[]
+    #gets the dimentions of the image
     width, height = image.size
+    #iterates through the height of the image and for each iteration creates a new row for each color channel
     for y in range(height):
         row_r=[]
         row_g=[]
         row_b=[]
+        #iterates through the width of the image and for eah one gets the rgb, appending each to its respective list
         for x in range(width):
             colors = image.getpixel((x,y))
             red,green,blue = colors
@@ -107,18 +128,25 @@ def image_to_matrix(image):
 
 
 def matrix_to_image(matrix_red,matrix_green,matrix_blue):
+    #creates an empty image with the same dimentions of the matrices given
     image = Image.new(size=(len(matrix_blue[0]),len(matrix_blue)), mode='RGB')
+    #iterates through each row (iteration through the y-axis)
     for y in range(len(matrix_blue)):
+        #iterates through each column (iteration through the x-axis)
         for x in range(len(matrix_blue[0])):
+            #creates the rgb pixel with the 3 matrices given as arguments and puts it on the image
             pixel_rgb = (matrix_red[y][x],matrix_green[y][x],matrix_blue[y][x])
             image.putpixel((x,y),pixel_rgb)
     return image
 
 def to_grayscale(matrix_red,matrix_green,matrix_blue):
     gray_matrix=[]
+    #iterates at the same time through the 3 color channel matrices
     for r_row,g_row,b_row in zip(matrix_red,matrix_green,matrix_blue):
         gray_row=[]
+        #iterates through each row of the 3 matrices at the same time
         for r,g,b in zip(r_row,g_row,b_row):
+            #calculates the grayscale value
             gray_row.append(round(r*0.2126+g*0.7152+b*0.0722))
         gray_matrix.append(gray_row)
     gray_image = matrix_to_image(gray_matrix,gray_matrix,gray_matrix)
@@ -215,20 +243,22 @@ def skew_matrix(matrix3, skew_x, skew_y):
 
 def edge_detection(matrix, threshold):
     edge_matrix = []
+    #creates the vertical and horizontal kernels
     vertical_kernel = [[-1,0,1],[-2,0,2],[-1,0,1]]
     horizontal_kernel = [[1,2,1],[0,0,0],[-1,-2,-1]]
     height,width = len(matrix), len(matrix[0])
     padded_matrix = []
+    #creates a matrix composed only of zeros with padding equal to 1
     for _ in range(height+2):
         padded_row=[]
         for _ in range(width+2):
             padded_row.append(0)
         padded_matrix.append(padded_row)
-
+    #fills the matrix created before with the values of the matrix given as argument, keeping the values intruced by padding as zero
     for y in range(height):
         for x in range(width):  
             padded_matrix[y+1][x+1] = matrix[y][x]
-    
+    #iterates through each value of the matrix and calculates the color difference gradient using the kernels in the value and its adjacent values
     for y in range(1,height+1):
         edge_row=[]
         for x in range(1,width+1):
@@ -238,17 +268,12 @@ def edge_detection(matrix, threshold):
                 for j in range(3):
                     vertical_value += vertical_kernel[i][j] * padded_matrix[y+i-1][x+j-1]
                     horizontal_value += horizontal_kernel[i][j] * padded_matrix[y+i-1][x+j-1]
+            #only considers it a corner if its value is superior to the threshold
             edge_row.append(0 if vertical_value**2 + horizontal_value**2<threshold**2 else 255)
-            #edge_row.append(int(min(255,math.sqrt(vertical_value**2 + horizontal_value**2))))
         edge_matrix.append(edge_row)
     return edge_matrix
 
 
-
-#r,g,b = image_to_matrix(Image.open('fat_frog.bmp'))
-#image = to_grayscale(r,g,b)[1]
-
-#image.show()
 
 
 
